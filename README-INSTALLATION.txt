@@ -1,41 +1,24 @@
-MARABOU LANGUAGES — PACKAGE PWA
-================================
+MARABOU LANGUAGES — VERSION 2
+============================
 
-Ce dossier contient une application web installable (PWA) pour iPhone 15 Pro.
-Ce n'est pas un fichier IPA ni une application App Store. Sur iPhone, les PWA
-s'installent depuis un site web sécurisé (HTTPS), puis s'ajoutent à l'écran
-d'accueil.
+Cette mise à jour conserve la PWA existante et ses icônes. Elle ajoute 24 leçons structurées A1-A2, 30 questions de quiz, 35 fiches de vocabulaire et un tableau de bord avec historique local des séances, minutes étudiées, activité sur 7 jours et scores par domaine.
 
-ÉTAPE 1 — HÉBERGER GRATUITEMENT
-1. Crée un compte gratuit sur https://github.com si tu n'en as pas.
-2. Crée un nouveau dépôt public nommé marabou-languages.
-3. Téléverse TOUS les fichiers et dossiers de ce package à la racine du dépôt.
-4. Dans le dépôt : Settings > Pages.
-5. Dans Build and deployment, choisis "Deploy from a branch".
-6. Sélectionne la branche "main" et le dossier "/ (root)", puis Save.
-7. Attends quelques minutes. GitHub Pages affichera une adresse HTTPS du type :
-   https://TON-PSEUDO.github.io/marabou-languages/
+MISE À JOUR GITHUB
+1. Ouvre le dépôt GitHub marabou-languages.
+2. Remplace index.html, app.js, style.css, manifest.webmanifest et sw.js par les fichiers de cette archive.
+3. Conserve le dossier icons déjà présent dans ton dépôt : les icônes ne sont pas modifiées dans cette version.
+4. Valide les changements (Commit changes) et attends la fin du déploiement GitHub Pages.
+5. Sur iPhone, ferme puis rouvre Marabou Languages. Si l'ancienne interface reste affichée, ferme complètement la PWA et recharge le site dans Safari. Le cache du service worker est maintenant versionné en v2.
 
-ÉTAPE 2 — INSTALLER SUR IPHONE 15 PRO
-1. Ouvre l'adresse HTTPS publiée dans Chrome sur ton iPhone.
-2. Si Chrome propose "Ajouter à l'écran d'accueil" dans le menu Partager/…,
-   utilise cette option.
-3. Si l'option n'apparaît pas dans Chrome, ouvre la même adresse dans Safari.
-4. Dans Safari : bouton Partager > Sur l'écran d'accueil > Ajouter.
-5. Lance Marabou depuis sa nouvelle icône.
+DONNÉES ET PROGRESSION
+- La progression existante est conservée grâce à la même clé de stockage local « marabouState ».
+- Les nouvelles séances, résultats et durées sont enregistrés localement sur l'appareil / le navigateur.
+- Les données ne sont pas synchronisées entre appareils et ne sont pas envoyées à un serveur.
+- Les anciennes validations des 12 chapitres sont remappées vers les nouvelles leçons les plus proches de leur thème. Les compteurs journaliers, la série, le meilleur quiz et le nombre de quiz sont conservés.
+- Les minutes des nouvelles séances sont comptabilisées dans le nouvel historique. Les anciens compteurs journaliers sont conservés mais ne sont pas convertis en séances détaillées.
 
-À SAVOIR
-- iOS peut imposer Safari pour l'ajout à l'écran d'accueil selon la version et
-  les options disponibles dans le navigateur. L'application installée fonctionne
-  ensuite comme une webapp autonome.
-- Les cours, quiz et fiches sont intégrés au package. Le cache permet de les
-  réutiliser hors connexion après le premier chargement.
-- La progression est stockée localement sur l'appareil et dans le navigateur
-  utilisé. Elle ne se synchronise pas automatiquement entre appareils.
-- La prononciation utilise la synthèse vocale disponible sur l'appareil.
-- Les polices Google peuvent nécessiter une connexion lors du premier affichage.
-- Pour publier une mise à jour, remplace les fichiers du dépôt. Incrémente le
-  nom du cache dans sw.js (CACHE="marabou-languages-v2") si tu modifies les
-  ressources mises en cache.
-
-Palette : violet profond #4c1d95, violet #6d28d9, lavande #ede9fe.
+CONTENU
+- 12 semaines, 2 leçons par semaine.
+- Grammaire, vocabulaire, conversation et compréhension.
+- Synthèse vocale espagnole via le navigateur / iOS.
+- Aucun système de vies ni paiement.
