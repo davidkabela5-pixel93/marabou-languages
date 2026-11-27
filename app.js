@@ -126,7 +126,7 @@ function speak(t){if(!t)return;if(!("speechSynthesis"in window)){alert("Synthès
 
 function resetProgress(){if(confirm("Effacer la progression V3 et tout son historique ? Cette action est irréversible.")){state=freshState();save();renderCourses();renderCard()}}
 renderStats();renderCourses();renderCard();
-if("serviceWorker"in navigator&&location.protocol.startsWith("http"))navigator.serviceWorker.register("./sw.js").catch(()=>{});
+if("serviceWorker"in navigator&&location.protocol.startsWith("http")){navigator.serviceWorker.register("./sw.js",{updateViaCache:"none"}).then(reg=>{reg.update().catch(()=>{});document.addEventListener("visibilitychange",()=>{if(!document.hidden)reg.update().catch(()=>{})})}).catch(()=>{})}
 
 
 /* V2.1: local calendar and personalised weekly review */
