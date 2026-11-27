@@ -30,8 +30,17 @@ const flashcards=[
 ];
 let state=loadState(),currentLesson=0,lessonStarted=0,lessonChecked=false,quiz=[],quizIndex=0,quizScore=0,quizStarted=0,quizAnswers=[],currentCard=null,cardStarted=0,flipped=false;
 function freshState(){return {schemaVersion:3,done:[],knownCards:[],streak:0,lastDay:"",sessions:[],attempts:[],daily:{},best:0}}
-function loadState(){try{const old=JSON.parse(localStorage.getItem("marabouState"))||{};if(old.schemaVersion===3)return Object.assign(freshState(),old);return Object.assign(freshState(),{sessions:Array.isArray(old.sessions)?old.sessions.map(s=>Object.assign({},s,{seconds:Math.round((s.minutes||0)*60),legacy:true})):[],streak:old.streak||0,lastDay:old.lastDay||""})}catch(e){return freshState()}}
-function save(){localStorage.setItem("marabouState",JSON.stringify(state));renderStats()}
+function validStoredState(v){return v&&typeof v==="object"&&Array.isArray(v.done)&&Array.isArray(v.knownCards)&&Array.isArray(v.sessions)&&Array.isArray(v.attempts)&&v.daily&&typeof v.daily==="object"&&!Array.isArray(v.daily)}
+function loadState(){
+ let primary=null,backup=null;
+ try{primary=JSON.parse(localStorage.getItem("marabouState"))}catch(e){}
+ try{backup=JSON.parse(localStorage.getItem("marabouStateBackup"))}catch(e){}
+ const valid=[primary,backup].filter(validStoredState).sort((a,b)=>(b.savedAt||0)-(a.savedAt||0));
+ if(valid.length)return {...freshState(),...valid[0],schemaVersion:3};
+ if(primary&&typeof primary==="object"&&Array.isArray(primary.sessions)){try{localStorage.setItem("marabouLegacyBackup",JSON.stringify(primary))}catch(e){}return {...freshState(),sessions:primary.sessions.map(s=>({...s,seconds:Number.isFinite(s.seconds)?s.seconds:Math.round((s.minutes||0)*60),legacy:true})),streak:primary.streak||0,lastDay:primary.lastDay||""}}
+ return freshState()
+}
+function save(){try{state.savedAt=Date.now();const raw=JSON.stringify(state);localStorage.setItem("marabouState",raw);localStorage.setItem("marabouStateBackup",raw)}catch(e){if(!window.marabouStorageWarning){window.marabouStorageWarning=true;alert("La sauvegarde locale a échoué. Exporte ta progression depuis le bilan avant de quitter la page.")}}renderStats()}
 function dayKey(d){d=d||new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
 function fmtTime(s){s=Math.max(0,Math.round(s||0));return Math.floor(s/60)+" min "+String(s%60).padStart(2,"0")+" s"}
 function record(type,title,seconds,score,detail){seconds=Math.max(0,Math.round(seconds));const date=dayKey();state.sessions.unshift(Object.assign({id:Date.now()+"-"+Math.random(),date:date,type:type,title:title,seconds:seconds,score:score===undefined?null:score},detail||{}));state.sessions=state.sessions.slice(0,500);state.daily[date]=(state.daily[date]||0)+seconds;if(state.lastDay!==date){const y=new Date();y.setDate(y.getDate()-1);state.streak=state.lastDay===dayKey(y)?state.streak+1:1;state.lastDay=date}save()}
@@ -112,7 +121,7 @@ function markCard(){if(!currentCard)return;const sec=Math.round((Date.now()-card
 var activeSpeech;
 function speak(t){if(!t)return;if(!("speechSynthesis"in window)){alert("Synthèse vocale indisponible.");return}const synth=window.speechSynthesis;synth.cancel();const u=new SpeechSynthesisUtterance(t);u.lang="es-ES";u.rate=.88;const voice=synth.getVoices().find(v=>v.lang==="es-ES")||synth.getVoices().find(v=>v.lang.startsWith("es"));if(voice)u.voice=voice;activeSpeech=u;u.onerror=e=>{if(!["canceled","interrupted"].includes(e.error))alert("Lecture audio indisponible. Vérifie le volume et les voix espagnoles.")};synth.speak(u);synth.resume()}
 
-function resetProgress(){if(confirm("Effacer la progression V3 et tout son historique ? Cette action est irréversible.")){state=freshState();save();renderCourses()}}
+function resetProgress(){if(confirm("Effacer la progression V3 et tout son historique ? Cette action est irréversible.")){state=freshState();save();renderCourses();renderCard()}}
 renderStats();renderCourses();renderCard();
 if("serviceWorker"in navigator&&location.protocol.startsWith("http"))navigator.serviceWorker.register("./sw.js").catch(()=>{});
 
