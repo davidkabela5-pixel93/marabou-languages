@@ -13,3 +13,35 @@
 .rainbow-brand span:nth-child(5){color:#55c8ed}
 .rainbow-brand span:nth-child(6){color:#8c83ff}
 .rainbow-brand span:nth-child(7){color:#e58bfa}
+
+/* España — premium visual theme */
+:root{--bg:#151116;--surface:#241a20;--surface2:#302126;--surface3:#3d292d;--purple:#ffd36a;--purple2:#e9a629;--deep:#a91e2d;--ink:#fff7ee;--muted:#c0adb0;--red:#e54a50;--yellow:#f1bf00;--line:#50333a;--shadow:0 12px 32px #0005}
+body{background:radial-gradient(ellipse at 5% 0%,#aa151b32,transparent 42%),radial-gradient(ellipse at 100% 20%,#f1bf0015,transparent 35%),var(--bg)}
+.topbar{background:#181217eF;border-bottom:1px solid #f1bf0030}
+.brand-mark{background:linear-gradient(145deg,#aa151b,#e94c36 55%,#f1bf00);box-shadow:0 5px 20px #aa151b55}
+.brand strong.rainbow-brand{display:flex;font-size:19px;letter-spacing:1px;background:linear-gradient(100deg,#ff6666,#ffd45c 48%,#ffb83d 65%,#ff6666);-webkit-background-clip:text;background-clip:text;color:transparent}
+.rainbow-brand span:nth-child(n){color:inherit}
+.brand small{color:#e8bc69}.streak{background:#39241f;border-color:#79512c}
+.hero{min-height:210px;background:linear-gradient(120deg,#68151f,#a91e2d 52%,#9a4c18);border-color:#f1bf0055;box-shadow:0 18px 40px #0005,inset 0 1px #ffffff20}
+.hero:after{width:260px;height:260px;background:radial-gradient(circle,#ffc52e55,transparent 70%);animation:glow 7s ease-in-out infinite alternate;pointer-events:none}
+.hero-orb{right:-20px;bottom:-24px;background:linear-gradient(145deg,#ffcf4c44,#ff7c3030);border-color:#ffdc8270;color:#ffe4a0}
+.hero h1{font-size:clamp(25px,5vw,36px);letter-spacing:-1px}
+#homeClock{display:inline-block;font-size:22px;color:#ffe19a;letter-spacing:1px;margin-bottom:8px}
+.daily-card,.progress-summary,.panel,.quiz-card,.lesson-box,.goal-list,.continue-card,.course,.stat{background:linear-gradient(145deg,#2c2026,#21191e);border-color:var(--line)}
+.daily-card{border-top:2px solid #f1bf00aa}
+.primary{background:linear-gradient(115deg,#c52c36,#ed6335);box-shadow:0 6px 20px #c52c3644;color:white}
+.secondary,.course button,.examples button{background:#483026;color:#ffe1a0;border:1px solid #765039}
+.progress-fill,.course .mini i,.q-progress i,.skill-track i,.chart-track i{background:linear-gradient(90deg,#d52d39,#ff8b38,#f1bf00)}
+.progress-track,.course .mini,.q-progress,.skill-track,.chart-track{background:#463037}
+.target-icon,.continue-icon,.history-icon{background:#4b3025;color:#ffd36a}
+.pill,.course-meta span{background:#493124;color:#ffda8b;border-color:#765039}
+.stat{border-top:2px solid #f1bf0088}.stat:nth-child(2){border-top-color:#f87552}.stat:nth-child(2) strong{color:#ff9878}.stat:nth-child(3){border-top-color:#51c6ad}.stat:nth-child(3) strong{color:#72ddc6}.stat:nth-child(4) strong{color:#a7b9ff}
+.course-num{background:linear-gradient(145deg,#c52c36,#8c1724)}.course:nth-child(3n+2) .course-num{background:linear-gradient(145deg,#f1bf00,#bb741c);color:#28180d}.course:nth-child(3n) .course-num{background:linear-gradient(145deg,#287f76,#16534e)}
+.course-filters .pill:nth-child(2){color:#ffab87}.course-filters .pill:nth-child(3){color:#8ce2ce;background:#233b36;border-color:#3a665a}.course-filters .pill:nth-child(4){color:#b6c8ff;background:#29334a;border-color:#495a82}
+.lesson-box .phrase{color:#ffe0a2}.tip{background:linear-gradient(110deg,#49292a,#38291f);color:#fff0d9}.examples>div,.answer{background:#33252a;border-color:#543a40}.answer.selected{background:#513526;border-color:#f1bf00}.answer.correct{background:#17392e;border-color:#42c98a}.answer.wrong{background:#49252c;border-color:#d43a45}
+.flashcard{background:linear-gradient(145deg,#811925,#bd3036 55%,#9c591c);border-color:#f1bf0070}.flashcard.flipped{background:linear-gradient(145deg,#6a3d18,#8e2028)}.flash-label,.flash-hint{color:#ffe4ac}
+.tabbar{background:#21191ef5;border-color:#55383a}.tab{color:#c0adb0}.tab.active{color:#ffd36a}.tab.active span{background:#523124}
+button,.course,.stat{transition:transform .18s ease,filter .18s ease,border-color .18s ease,box-shadow .18s ease}button:focus-visible{outline:2px solid #ffd36a;outline-offset:3px}
+@media(hover:hover){button:not(:disabled):hover{filter:brightness(1.13)}.course:hover,.stat:hover{transform:translateY(-2px);border-color:#bd793d;box-shadow:0 12px 25px #0004}}
+@keyframes glow{from{transform:scale(.9);opacity:.65}to{transform:scale(1.15);opacity:1}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
