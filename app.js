@@ -69,3 +69,42 @@ function speak(t){if("speechSynthesis"in window){const u=new SpeechSynthesisUtte
 function resetProgress(){if(confirm("Effacer la progression V3 et tout son historique ? Cette action est irréversible.")){state=freshState();save();renderCourses()}}
 renderStats();renderCourses();renderCard();
 if("serviceWorker"in navigator&&location.protocol.startsWith("http"))navigator.serviceWorker.register("./sw.js").catch(()=>{});
+
+
+/* V2.1: local calendar and personalised weekly review */
+let calendarMonth=new Date(new Date().getFullYear(),new Date().getMonth(),1), selectedDay=dayKey();
+function shiftCalendar(delta){calendarMonth=new Date(calendarMonth.getFullYear(),calendarMonth.getMonth()+delta,1);renderCalendar()}
+function selectCalendarDay(key){selectedDay=key;renderCalendar()}
+function renderCalendar(){
+ const grid=document.getElementById("calendarGrid");if(!grid)return;
+ const y=calendarMonth.getFullYear(),m=calendarMonth.getMonth(),offset=(calendarMonth.getDay()+6)%7,days=new Date(y,m+1,0).getDate(),today=dayKey();
+ set("calendarMonth",new Intl.DateTimeFormat("fr-FR",{month:"long",year:"numeric"}).format(calendarMonth));
+ grid.innerHTML=Array.from({length:offset},()=>"<span></span>").join("")+Array.from({length:days},(_,i)=>{
+ const key=dayKey(new Date(y,m,i+1)),seconds=state.daily[key]||0,active=seconds>0||state.sessions.some(s=>s.date===key);
+ return '<button type="button" class="calendar-day '+(active?'studied ':'')+(seconds>=900?'target-met ':'')+(key===today?'today ':'')+(key===selectedDay?'chosen':'')+'" aria-pressed="'+(key===selectedDay)+'" aria-label="'+key+', '+fmtTime(seconds)+'" onclick="selectCalendarDay(\''+key+'\')">'+(i+1)+(active?'<i></i>':'')+'</button>';
+ }).join("");
+ const sessions=state.sessions.filter(s=>s.date===selectedDay);
+ set("calendarDate",new Intl.DateTimeFormat("fr-FR",{dateStyle:"full"}).format(new Date(selectedDay+"T12:00:00")));
+ set("calendarDuration",fmtTime(state.daily[selectedDay]||0));
+ const detail=document.getElementById("calendarDetail");
+ detail.innerHTML=sessions.length?sessions.map(s=>'<div class="calendar-entry"><span>'+esc(s.title)+'</span><b>'+fmtTime(s.seconds)+'</b></div>').join(""):'<p class="muted">'+(selectedDay>today?'Journée à venir.':'Aucune séance dans l’historique disponible.')+'</p>';
+}
+function renderPersonalReview(){
+ const el=document.getElementById("personalReview");if(!el)return;
+ const end=new Date(),start=new Date(end);start.setDate(start.getDate()-6);
+ const keys=Array.from({length:7},(_,i)=>{const d=new Date(start);d.setDate(d.getDate()+i);return dayKey(d)});
+ const sessions=state.sessions.filter(s=>keys.includes(s.date)), attempts=state.attempts.filter(a=>keys.includes(a.date));
+ const seconds=keys.reduce((sum,k)=>sum+(state.daily[k]||0),0),active=keys.filter(k=>(state.daily[k]||0)>0||sessions.some(s=>s.date===k)).length,goals=keys.filter(k=>(state.daily[k]||0)>=900).length;
+ const scores=sessions.filter(s=>s.type==="Quiz"&&Number.isFinite(s.score)),accuracy=attempts.length?Math.round(attempts.filter(a=>a.correct).length/attempts.length*100):null;
+ const errors=new Map();attempts.filter(a=>!a.correct).forEach(a=>errors.set(a.lesson,(errors.get(a.lesson)||0)+1));
+ const weak=[...errors.entries()].sort((a,b)=>b[1]-a[1])[0];
+ const next=lessons.find(l=>!state.done.includes(l.id));
+ const advice=!active?"Commence par une leçon de 15 minutes aujourd’hui.":weak?"À revoir en priorité : "+weak[0]+".":goals<5?"Vise une séance de 15 minutes plus régulière la semaine prochaine.":"Bonne régularité : continue et varie les exercices.";
+ el.innerHTML='<p class="muted">'+keys[0]+' → '+keys[6]+' · 7 jours glissants</p><div class="review-grid">'+[
+ [fmtTime(seconds),"Temps étudié"],[active+"/7","Jours actifs"],[goals+"/7","Objectifs atteints"],[new Set(sessions.filter(s=>s.type==="Leçon").map(s=>s.lessonId||s.title)).size,"Leçons travaillées"],[accuracy===null?"—":accuracy+"%","Réponses correctes"],[scores.length?Math.round(scores.reduce((a,s)=>a+s.score,0)/scores.length)+"%":"—","Moyenne des quiz"]
+ ].map(([v,l])=>'<div class="review-metric"><strong>'+v+'</strong><small>'+l+'</small></div>').join("")+'</div><div class="tip"><b>Ta priorité</b><br>'+esc(advice)+'</div>'+(next?'<button class="primary full" onclick="openLesson('+(next.day-1)+')">Prochaine leçon : '+esc(next.title)+'</button>':'');
+}
+const originalRenderStats=renderStats;
+renderStats=function(){originalRenderStats();renderCalendar();renderPersonalReview()};
+renderCalendar();renderPersonalReview();
+document.addEventListener("visibilitychange",()=>{if(!document.hidden){renderCalendar();renderPersonalReview()}});
