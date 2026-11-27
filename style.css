@@ -82,3 +82,5 @@ button,.course,.stat{transition:transform .18s ease,filter .18s ease,border-colo
 }
 @keyframes mobile-enter{from{opacity:.6;transform:translateY(5px)}to{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){.screen{animation:none!important}}
+
+.training-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:18px 0}.training-tile{display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:8px;min-width:0;padding:16px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(145deg,#48232b,#292026);color:var(--ink);cursor:pointer}.training-tile strong{font-size:16px;color:#ffe1a0}.training-tile small{font-size:12px;line-height:1.4;color:#dbc6c7}.training-icon{font-size:25px;color:#ffd36a}.training-tile:focus-visible{outline:2px solid #ffd36a}.tabbar .tab{min-width:0}.tabbar .tab span{max-width:100%}@media(max-width:649px){.tabbar .tab{font-size:9px}.tabbar .tab.active span{padding:2px 6px}.training-tile{padding:12px}}
