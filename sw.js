@@ -1,4 +1,4 @@
-const CACHE="marabou-languages-v41";
+const CACHE="marabou-languages-v42";
 const ASSETS=["./","./index.html","./style.css","./app.js","./pedagogy.js","./ai-client.js","./ai-ui.js","./ai-learning.js","./daily-engine.js","./assessment.js","./manifest.webmanifest","./icons/icon-192.png","./icons/icon-512.png","./icons/apple-glass-180.png"];
 self.addEventListener("install",event=>event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS.map(path=>new Request(path,{cache:"reload"})))).then(()=>self.skipWaiting())));
 self.addEventListener("activate",event=>event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key.startsWith("marabou-languages-")&&key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim())));
