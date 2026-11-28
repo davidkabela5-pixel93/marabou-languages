@@ -6,5 +6,5 @@ test("AI session explicit request, safe rendering and disconnect",async({page})=
  await expect(page.locator("#aiSend")).toBeDisabled();expect(calls).toBe(0);
  await page.locator("#aiToken").fill("a".repeat(64));await page.locator("#aiConnect").click();await page.locator("#aiMessage").fill("Hola");await page.locator("#aiSend").click();
  await expect(page.locator("#aiReplies")).toContainText("<img src=x onerror=alert(1)> Hola");await expect(page.locator("#aiReplies img")).toHaveCount(0);
- await page.locator("#aiDisconnect").click();await expect(page.locator("#aiSend")).toBeDisabled();await expect(page.locator("#aiReplies")).toBeEmpty();
+ await page.reload();await page.locator('[data-screen="training"]').click();await page.getByRole("button",{name:"Ouvrir le professeur IA"}).click();await expect(page.locator("#aiSend")).toBeEnabled();await expect(page.locator("#aiToken")).toBeHidden();await page.locator("#aiDisconnect").click();await expect(page.locator("#aiSend")).toBeDisabled();await expect(page.locator("#aiReplies")).toBeEmpty();await page.reload();await page.locator('[data-screen="training"]').click();await page.getByRole("button",{name:"Ouvrir le professeur IA"}).click();await expect(page.locator("#aiSend")).toBeDisabled();
 });
