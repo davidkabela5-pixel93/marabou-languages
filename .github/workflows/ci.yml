@@ -15,7 +15,8 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: '22'
-      - run: node --check app.js && node --check pedagogy.js && node --check sw.js
+      - run: node --check app.js && node --check pedagogy.js && node --check sw.js && node --check ai-client.js && node --check ai/worker.mjs
+      - run: node --test ai/worker.test.mjs
       - run: npm install --no-audit --no-fund
       - run: npx playwright install --with-deps chromium webkit
       - run: npm test -- --reporter=list,html
@@ -49,7 +50,7 @@ jobs:
       - name: Prepare static site
         run: |
           mkdir -p _site
-          cp index.html app.js pedagogy.js style.css sw.js manifest.webmanifest _site/
+          cp index.html app.js pedagogy.js ai-client.js style.css sw.js manifest.webmanifest _site/
           cp -r icons _site/
       - uses: actions/upload-pages-artifact@v3
         with:

@@ -1,0 +1,11 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import worker from "./worker.mjs";
+import "../ai-client.js";
+const env={ALLOWED_ORIGIN:"https://example.com",ACCESS_TOKEN:"test",GROQ_API_KEY:"fake",AI_LIMITER:{limit:async()=>({success:true})}};
+const req=(token="test",body={task:"tutor",level:"A2",message:"Hola"})=>new Request("https://worker.example",{method:"POST",headers:{Origin:env.ALLOWED_ORIGIN,Authorization:"Bearer "+token,"Content-Type":"application/json"},body:JSON.stringify(body)});
+test("reject unauthorized",async()=>assert.equal((await worker.fetch(req("wrong"),env)).status,401));
+test("reject invalid payload",async()=>assert.equal((await worker.fetch(req("test",{task:"invalid"}),env)).status,400));
+test("rate limit",async()=>assert.equal((await worker.fetch(req(),{...env,AI_LIMITER:{limit:async()=>({success:false})}})).status,429));
+test("client quota fallback",async()=>assert.deepEqual(await MarabouAI.request({endpoint:"https://worker.example",token:"test",task:"tutor",message:"Hola"},async()=>new Response("",{status:429})),{ok:false,reason:"quota"}));
+test("client success",async()=>assert.deepEqual(await MarabouAI.request({endpoint:"https://worker.example",token:"test",task:"tutor",message:"Hola"},async()=>Response.json({text:"Hola"})),{ok:true,text:"Hola"}));
